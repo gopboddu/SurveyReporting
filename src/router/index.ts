@@ -7,6 +7,7 @@ import SurveyReport from '../views/SurveyReport/SureveyReport.vue'
 import SurveyQuestions from '../views/SurveyReport/SurveyQuestions.vue'
 import CreateAssignment from '@/views/Assignment/CreateAssignment.vue'
 import CreateUser from '@/views/Users/CreateUser.vue'
+import Notifications from '@/views/Notifications/NotificationPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -50,6 +51,11 @@ const router = createRouter({
       path: '/createuser',
       name: 'createuser',
       component: CreateUser
+    },
+    {
+      path: '/notifications',
+      name: 'notifications',
+      component: Notifications
     },
   ]
 })

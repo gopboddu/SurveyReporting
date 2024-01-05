@@ -134,7 +134,6 @@
           <img src="@/assets/tick.svg" alt="" class="simg" />
         </div>
         <h2>You are successfully completed your Assessment-01.</h2>
-        <Chat :message="messages" v-if="messages.length > 0" class="userchat" />
       </div>
     </div>
   </div>
@@ -159,10 +158,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import Chat from "@/components/Chat/ChatWindow.vue";
-// import { useRouter } from "vue-router";
-
-// const router = useRouter();
+import {getLocalData} from "@/components/LocalData";
 const questionForm = ref([
   {
     qTtitle: "",
@@ -205,39 +201,24 @@ onMounted(() => {
 
   if (ele) showQuestions.value = false;
   else {
-    let str = localStorage.getItem("users");
-    let temp = [];
-    if (str) {
-      temp = JSON.parse(str);
-    }
-    let assign = temp.find((item: any) => item.userid === username.value)
+    let assign = getLocalData("users").find((item: any) => item.userid === username.value)
       .assignment;
-
-    let str2 = localStorage.getItem("assignments");
-    let assArray = [];
-    if (str2) {
-      assArray = JSON.parse(str2);
-    }
-    let assignment = assArray.find((ele: any) => ele.assignment === assign)
+    let assignment = getLocalData("assignments").find((ele: any) => ele.assignment === assign)
       .questions;
-
-    let qArray = [];
     let temp2 = []; 
-    let qString = localStorage.getItem("questions");
-    if (qString) {
-      qArray = JSON.parse(qString);  
       assignment.map((ele: any) => {
-        let temp = qArray.find((item: any) => item.qID == ele);
+        let temp = getLocalData("questions").find((item: any) => item.qID == ele);
         if (temp) temp2.push(temp);
       });
     questionForm.value = temp2;
     result.value[0].qId = questionForm.value[0].qID;
     result.value[0].questionText = questionForm.value[0].questionText;
-  }
+  // }
     showQuestions.value = true;
   }
-  let notifications = localStorage.getItem("notifications");
-  if (notifications) messages.value = JSON.parse(notifications);
+  // let notifications = localStorage.getItem("notifications");
+  // if (notifications) messages.value = JSON.parse(notifications);
+  messages.value = getLocalData("notifications")
   messages.value = messages.value.filter((ele) => ele.to == username.value);
 });
 const nextQuestion = () => {
@@ -286,6 +267,7 @@ const saveComment = () => {
     sender: username.value,
     to: "Admin",
     message: txtmessage.value,
+    status:"unread",
   };
   let note = localStorage.getItem("notifications");
   let nArray = [];

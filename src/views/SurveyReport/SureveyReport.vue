@@ -94,7 +94,8 @@ const saveComment = () => {
   let obj = {
     sender:"Admin",
     to:selUser.value,
-    message:txtmessage.value
+    message:txtmessage.value,
+    status:"unread"
   }
   let note = localStorage.getItem("notifications");
   let nArray = [];

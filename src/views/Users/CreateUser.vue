@@ -6,6 +6,12 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
       <div class="selectuser mb-20">
         <label class="label-width">User Id:</label>
         <el-input v-model="user.userID" class="width50" />
+        <div
+          class="invalid-text msgError"
+          v-if="submitted && user.userID == ''"
+        >
+          User ID field is required.
+        </div>
       </div>
       <div class="selectuser mb-20">
         <label class="label-width">Password:</label>
@@ -17,6 +23,12 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
               aria-hidden="true"
             ></i></template
         ></el-input>
+        <div
+          class="invalid-text msgError"
+          v-if="submitted && user.password == ''"
+        >
+          Password field is required.
+        </div>
       </div>
 
       <div class="selectuser">
@@ -34,6 +46,12 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
             :value="item"
           />
         </el-select>
+        <div
+          class="invalid-text msgError"
+          v-if="submitted && user.category == ''"
+        >
+          Category field is required.
+        </div>
       </div>
       <div class="selectuser mb-40">
         <label class="label-width">Select Assignment:</label>
@@ -50,8 +68,23 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
             :value="item.assignment"
           />
         </el-select>
+        <div
+          class="invalid-text msgError"
+          v-if="submitted && user.assignment == ''"
+        >
+          Assignment field is required.
+        </div>
       </div>
-      <el-button type="success" class="mt-20" @click="createUser"
+      <el-button
+        type="success"
+        class="mt-20"
+        @click="createUser"
+        :disabled="
+          user.userID == '' ||
+          user.category == '' ||
+          user.password == '' ||
+          user.assignment == ''
+        "
         >Save</el-button
       >
     </div>
@@ -88,6 +121,7 @@ const category = ref([
 ]);
 const assignments = ref([]);
 const showConfirm = ref(false);
+const submitted = ref(false);
 
 onMounted(() => {
   let assment = localStorage.getItem("assignments");
@@ -98,26 +132,35 @@ onMounted(() => {
 });
 
 const createUser = () => {
-  let obj = {
-    userid: user.value.userID,
-    usertype: user.value.category,
-    password: user.value.password,
-    assignment: user.value.assignment,
-    path: "/questions",
-  };
+  if (
+    user.value.userID == "" ||
+    user.value.category == "" ||
+    user.value.password == "" ||
+    user.value.assignment == ""
+  )
+    submitted.value = true;
+  else {
+    let obj = {
+      userid: user.value.userID,
+      usertype: user.value.category,
+      password: user.value.password,
+      assignment: user.value.assignment,
+      path: "/questions",
+    };
 
-  let users = localStorage.getItem("users");
-  let aArray = [];
-  if (users) {
-    aArray = JSON.parse(users);
+    let users = localStorage.getItem("users");
+    let aArray = [];
+    if (users) {
+      aArray = JSON.parse(users);
+    }
+    aArray.push(obj);
+    localStorage.setItem("users", JSON.stringify(aArray));
+    showConfirm.value = true;
+    user.value.userID = "";
+    user.value.password = "";
+    user.value.category = "";
+    user.value.assignment = "";
   }
-  aArray.push(obj);
-  localStorage.setItem("users", JSON.stringify(aArray));
-  showConfirm.value = true;
-  user.value.userID = "";
-  user.value.password = "";
-  user.value.category = "";
-  user.value.assignment = "";
 };
 
 const passwordGenerate = () => {
@@ -133,7 +176,8 @@ const passwordGenerate = () => {
 };
 
 const closePopup = () => {
-    showConfirm.value = false;
-    passwordGenerate()
-}
+  showConfirm.value = false;
+  passwordGenerate();
+  submitted.value = false;
+};
 </script>

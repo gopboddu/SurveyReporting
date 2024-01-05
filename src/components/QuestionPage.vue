@@ -31,15 +31,6 @@
                 :value="item.value"
               />
             </el-select>
-            <!-- <select v-model="questionForm.category" class="el-input__wrapper catselect form-control">
-              <option key="" value="" label="Select Category">Select Category</option>
-              <option
-                v-for="item in categoryoptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value"
-              >{{ item.value }} </option>
-            </select> -->
           </div>
           <div class="mb-20">
             <el-input
@@ -120,9 +111,7 @@
           </div>
           <div class="mb-20">
             <el-row :gutter="10">
-              <span
-                >Document Required</span
-              >
+              <span>Document Required</span>
               <el-switch
                 v-model="questionForm.isrequired"
                 class="ml-10"
@@ -137,7 +126,15 @@
             </el-row>
           </div>
           <el-form-item id="question" class="mb-40">
-            <el-button type="primary" @click="submitForm">
+            <el-button
+              type="primary"
+              @click="submitForm"
+              :disabled="
+                questionForm.category == '' ||
+                questionForm.qTtitle == '' ||
+                questionForm.questionText == ''
+              "
+            >
               Create
             </el-button>
             <el-button @click="closePopup" type="warning">Clear</el-button>
@@ -153,7 +150,7 @@ import { reactive, ref } from "vue";
 import type { FormInstance } from "element-plus";
 
 interface RuleForm {
-  qID:number;
+  qID: number;
   questionText: string;
   qTtitle: string;
   questionType: string;
@@ -171,7 +168,7 @@ const props = defineProps({
 const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 const questionForm = reactive<RuleForm>({
-  qID:0,
+  qID: 0,
   qTtitle: "",
   questionText: "",
   questionType: props.questionType,
@@ -183,12 +180,12 @@ const questionForm = reactive<RuleForm>({
 
 const submitForm = () => {
   let qString = localStorage.getItem("questions");
-  
+
   let qArray = [];
   if (qString) {
     qArray = JSON.parse(qString);
   }
-  questionForm.qID =qArray.length;
+  questionForm.qID = qArray.length;
 
   qArray.push(questionForm);
   localStorage.setItem("questions", JSON.stringify(qArray));

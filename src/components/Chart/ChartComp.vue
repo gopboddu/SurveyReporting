@@ -1,26 +1,29 @@
 <template>
-  <div style="width: 500px">
-    <DoughnutChart v-bind="doughnutChartProps" />
+  <div style="width: 500px;">
+    <span class="signtitle mb-0">{{ showResult ? "Survey Results" :"Assignments"}}</span>
+    <DoughnutChart v-bind="doughnutChartProps" @click="updateChart" />
   </div>
+  <el-button type="primary" class="fr w-100 mb-20" @click="updateResult" v-if="showResult">Back</el-button>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { DoughnutChart, useDoughnutChart } from "vue-chart-3";
 import { Chart, type ChartData, type ChartOptions, registerables } from "chart.js";
+import { getLocalData } from "../LocalData";
 
 Chart.register(...registerables);
 export default defineComponent({
   name: "ChartComp",
   components: { DoughnutChart },
-  //   props: {
-  //     dataValues: Array,
-  //     dataLabels: Array
-  // },
+    props: {
+      chartValue : String,
+  },
   setup() {
     const dataValues = ref([]);
     const dataLabels = ref(["Makeup", "Lighting", "Costumes", "Production", "Camera"]);
     const toggleLegend = ref(true);
+    const showResult = ref(false);
     const testData = computed<ChartData<"doughnut">>(() => ({
       labels: dataLabels.value,
       datasets: [
@@ -37,14 +40,7 @@ export default defineComponent({
       ],
     }));
     onMounted(() => {
-        let qString = localStorage.getItem("surveyResult");
-        let qArray = [];
-        if (qString) {
-          qArray = JSON.parse(qString);
-        }
-        dataLabels.value.map((ele)=>{
-          dataValues.value.push(qArray[0][ele].length)
-        })
+      updateResult();
     })
     const options = computed<ChartOptions<"doughnut">>(() => ({
       scales: {
@@ -72,10 +68,8 @@ export default defineComponent({
     let index = ref(20);
 
     function shuffleData() {
-      // dataValues.value = shuffle(dataValues.value);
       dataValues.value.push(index.value);
       dataLabels.value.push("Other" + index.value);
-      console.log(dataValues.value);
       index.value++;
     }
 
@@ -83,6 +77,23 @@ export default defineComponent({
       toggleLegend.value = !toggleLegend.value;
     }
 
+    function  updateChart(){
+      dataValues.value = [];
+    let qArray = getLocalData("surveyResult");
+        dataLabels.value.map((ele)=>{
+          dataValues.value.push(qArray[0][ele].length)
+        })
+        showResult.value = true;
+    }
+
+    function  updateResult(){
+      dataValues.value = [];
+      let qArray = getLocalData("assignments");
+        dataLabels.value.map((ele)=>{
+          dataValues.value.push(qArray.filter((item) => item.categeory === ele).length)
+        })
+      showResult.value = false;
+    }
     return {
       shuffleData,
       switchLegend,
@@ -90,6 +101,9 @@ export default defineComponent({
       options,
       doughnutChartRef,
       doughnutChartProps,
+      updateChart,
+      updateResult,
+      showResult
     };
   },
 });

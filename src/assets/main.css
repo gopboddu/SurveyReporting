@@ -45,17 +45,29 @@ a,
 .mb-20{
   margin-bottom: 20px;
 }
+.mb-0{
+  margin-bottom: 0px !important;
+}
 .mb-40{
   margin-bottom: 40px;
 }
 .mt-20{
   margin-top: 20px;
 }
+.mt-40{
+  margin-top: 40px;
+}
 .ml-10{
   margin-left: 10px;
 }
+.p-0{
+  padding: 0px !important;
+}
 .pr-40{
   padding-right: 40px;
+}
+.pr-20{
+  padding-right: 20px;
 }
 .fr {
   float: right;
@@ -69,6 +81,9 @@ a,
 .cl{
   clear: both;
 }
+ul {
+  list-style: none !important;
+}
 .handpointer {
   cursor: pointer;
 }
@@ -79,6 +94,15 @@ a,
   width : 200px;
   display: inline-block;
 }
+.label-width2{
+  width : 150px;
+  display: inline-block;
+  font-weight: 600;
+}
+.quesback{
+  background: #c7c7c7;
+  padding-left: 10px;
+}
 .width50{
   width: 30% !important;
   height: 40px;
@@ -86,6 +110,12 @@ a,
 .width60{
   width: 37% !important;
   height: 40px;
+}
+.w-50 {
+  width: 50px !important;
+}
+.w-100 {
+  width: 100px !important;
 }
 .w-300{
   width : 300px !important;
@@ -643,6 +673,8 @@ body.dark .switch::before {
   background: #fff;
   width: 100%;
   text-align: center;
+  height: 500px;
+  overflow-y: auto;
 }
 .note {
   width: 280px;
@@ -669,20 +701,21 @@ body.dark .switch::before {
   background-color: transparent;
   width: 100%;
   text-align: left;
-  padding: 10px;
+  cursor: pointer;
 }
 .sender{
+  color:#0079AF;
   font-weight: 600;
   margin-bottom: 5px;
 }
 .sndmsg{
   padding-left: 10px;
+  padding-right: 10px;
 }
 .closebtn{
   float: right;
   font-size: 20px;
   font-weight: 600;
-  padding-right: 10px;
   cursor: pointer;
 }
 
@@ -713,12 +746,15 @@ a:hover {
   border-left: 1px solid #d1cece;
   border-right: 1px solid #d1cece;
 }
-
+.active {
+  font-weight: 700 !important;
+}
 .selectuser{
   padding-left: 40px;
   margin-bottom: 20px;
   width: 100%;
   text-align: left;
+  overflow-y: auto;
 }
 
 .successmsg{
@@ -742,6 +778,7 @@ a:hover {
 .questab{
   padding: 0 !important;
   border-radius: 15px;
+  width: 70% !important;
 }
 .assigntable{
   border: 1px solid #d1cece;
@@ -750,3 +787,30 @@ a:hover {
 .el-table {
   border-radius: 10px;
  }
+.msgError {
+  left: 200px;
+  position: relative;
+}
+.notify-content{
+  text-align: left;
+  background: #c7c7c7;
+  padding: 20px;
+  border-radius: 20px;
+  margin-top: 70px;
+}
+
+.notify-ans{
+  margin-left: 0px !important;
+  margin-bottom: 10px;
+}
+.count{
+  display: inline-block;
+  border-radius: 13px;
+  width: 25px;
+  height: 25px;
+  background: #ff0505;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
