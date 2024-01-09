@@ -22,6 +22,7 @@ a,
 @media (min-width: 1024px) {
   body {
     place-items: center;
+  background-color: #f3f4f3;
   }
 }
 .main-page{
@@ -32,6 +33,18 @@ a,
   left: 120px;
   position: relative;
   transition: all 0.3s ease;
+}
+.main-body::after{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100px;
+  z-index: -1;
+  background: #64c5b1;
+  content: '';
+  border-radius: 0;
+  left: 0;
 }
 .catselect {
   border: 1px solid #fff !important;
@@ -68,6 +81,9 @@ a,
 }
 .pr-20{
   padding-right: 20px;
+}
+.pl-30{
+  padding-left: 30px !important;
 }
 .fr {
   float: right;
@@ -120,6 +136,16 @@ ul {
 .w-300{
   width : 300px !important;
 }
+.h-150{
+  height: 150px;
+}
+.t-70{
+  top:55px;
+  position: relative;
+}
+.t-20 {
+  top:20px;
+}
 .login{
   position: relative;
   height: 100vh;
@@ -151,32 +177,47 @@ ul {
   font-weight: 500;
   color: #ff0000;
 }
+.dashtitle{
+  color: #fff;
+  font-weight: 700;
+  font-size: 30px;
+  padding-left: 10px;
+  padding-bottom: 20px;
+  float: left;
+}
 .signtitle{
   display: block;
   font-size: 20px;
   font-weight: 600;
   color: #2A387A;
   margin-bottom: 20px;
+  left: -50px;
+  position: relative;
 }
 .maincontainer{
   position: relative;
   width: 90%;
   display: block;
-  top:1rem;
+  /* top:1rem; */
   left: 4rem;
-  padding: 30px;
+  padding: 10px 30px;
   margin: auto;
   text-align: center;
 }
 .textleft{
   text-align: left !important;
 }
+.w-400 {
+  width: 400px;
+}
 .chartcontainer{
   padding: 30px;
   border: 2px solid #f0f0f0;
   border-radius: 20px;
   height: 500px;
-  width: 600px;
+  width: 500px;
+  background-color: #fff;
+  position: relative;
 }
 .userInfo{
   float: left;
@@ -222,8 +263,10 @@ ul {
 }
 .addbtn{
   float: right;
-  height: 40px;
+  height: 40px !important;
+    border-radius: 10px !important;
   font-size: 20px;
+  width: 150px;
 }
 .questionblock{
   position: absolute;
@@ -355,9 +398,11 @@ ul {
   height: 100%;
   width: 240px;
   padding: 10px 14px;
-  background: #e6e6e6;
+  background: #fff;
   transition: all 0.3s ease;
   z-index: 100;
+  box-shadow: 0 5px 20px rgba(0,0,0,.2);
+
 }
 .sidebar.close {
   width: 88px;
@@ -391,12 +436,11 @@ ul {
 
 .sidebar .text,
 .sidebar .icon {
-  color: #0079AF;
+  color: #144339;
   transition: var(--tran-03);
 }
 
 .sidebar .text {
-  font-size: 17px;
   font-weight: 500;
   white-space: nowrap;
   opacity: 1;
@@ -411,7 +455,7 @@ ul {
 }
 
 .sidebar header .image-text {
-  display: flex;
+  /* display: flex; */
   align-items: center;
 }
 .sidebar header .logo-text {
@@ -437,7 +481,7 @@ header .image-text .profession {
 }
 
 .sidebar header .image img {
-  width: 40px;
+  width: 100px;
   border-radius: 6px;
 }
 
@@ -479,6 +523,7 @@ body.dark .sidebar header .toggle {
 
 .menu-links{
   padding-left: 0px !important;
+  font-family: Comfortaa,cursive;
 }
 
 .sidebar li a {
@@ -498,7 +543,7 @@ body.dark .sidebar header .toggle {
 }
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
-  color: #0079AF;
+  color: #144339;
 }
 body.dark .sidebar li a:hover .icon,
 body.dark .sidebar li a:hover .text {
@@ -551,8 +596,6 @@ body.dark .mode .sun-moon i.moon {
   border-radius: 6px;
   cursor: pointer;
 }
-
-
 
 body.dark .switch::before {
   left: 20px;
@@ -673,8 +716,8 @@ body.dark .switch::before {
   background: #fff;
   width: 100%;
   text-align: center;
-  height: 500px;
-  overflow-y: auto;
+  /* height: 500px;
+  overflow-y: auto; */
 }
 .note {
   width: 280px;
@@ -729,32 +772,17 @@ a:hover {
 .navborder{
   border: 1px solid #d1cece;
   min-height: 500px;
-}
-.nav-cont{
-  background-color: #f1f1f1;
-  border-top: 1px solid #d1cece;
-}
-.navbtn{
-  border: none;
-  width: 120px;
-  padding: 10px;
-  background-color: #f1f1f1;
-}
-.navbtn.active {
+  border-radius: 20px;
+  margin-top: 40px;
   background-color: #fff;
-  border-bottom: #fff ;
-  border-left: 1px solid #d1cece;
-  border-right: 1px solid #d1cece;
 }
-.active {
-  font-weight: 700 !important;
-}
+
 .selectuser{
   padding-left: 40px;
   margin-bottom: 20px;
   width: 100%;
   text-align: left;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .successmsg{
@@ -796,7 +824,6 @@ a:hover {
   background: #c7c7c7;
   padding: 20px;
   border-radius: 20px;
-  margin-top: 70px;
 }
 
 .notify-ans{
@@ -813,4 +840,121 @@ a:hover {
   text-align: center;
   font-weight: 700;
   font-size: 15px;
+}
+
+.mailIcon{
+  background: #2A387A;
+  padding: 5px 7px;
+  color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  left: -36px;
+  position: relative;
+  vertical-align: middle;
+}
+
+/* Notification message section  */
+
+.message-conversation {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+}
+
+.message-content {
+  padding: 10px;
+  border-radius: 5px;
+}
+.adminbackground {
+  background: #f0f8ff;
+  border-radius: 10px;
+}
+.message-after-effect {
+  position: relative;
+  top:20px;
+  width: 2px;
+  height: 90px;
+  background-color: #ff0000;
+  margin-right: 10px;
+}
+
+/* Tab Strp CSS */
+.wrapper{
+  width: 500px;
+  height: 100%;
+  background: #fff;
+  margin: 15px auto 0;
+  font-family: 'comic Sans MS', sans-serif;
+  font-size: 18px;
+}
+
+.wrapper .title{
+  padding: 30px 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  border-bottom: 1px solid #ebedec;
+}
+
+.wrapper .tabs_wrap{
+  padding: 20px;
+  /* border-bottom: 1px solid #ebedec; */
+}
+
+.wrapper .tabs_wrap ul{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.wrapper .tabs_wrap ul li{
+  width: 135px;
+    text-align: center;
+    background: #e9ecf1;
+    border-right: 1px solid #c1c4c9;
+    padding: 13px 15px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.wrapper .tabs_wrap ul li:first-child{
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.wrapper .tabs_wrap ul li:last-child{
+  border-right: 0px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.wrapper .tabs_wrap ul li:hover,
+.wrapper .tabs_wrap ul li.active{
+  background: #67c23a;
+  color: #fff;
+}
+
+.wrapper .container .item_wrap{
+  padding: 10px 20px;
+  border-bottom: 1px solid #ebedec;
+  cursor: pointer;
+}
+
+.wrapper .container .item_wrap:hover{
+  background: #e9ecf1;
 }

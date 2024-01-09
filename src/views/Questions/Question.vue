@@ -12,7 +12,7 @@
           >
             <div class="mb-20">
               <label class="questionline">{{
-                index+1 +") "+ questionForm[index].questionText
+                index + 1 + ") " + questionForm[index].questionText
               }}</label>
             </div>
             <div
@@ -132,8 +132,23 @@
       <div class="successmsg" v-else>
         <div class="simgcont">
           <img src="@/assets/tick.svg" alt="" class="simg" />
+          <h2>You are successfully completed your {{ assign }}</h2>
         </div>
-        <h2>You are successfully completed your Assessment-01.</h2>
+
+        <div class="mt-40 h-150" v-if="showFeedback">
+          <QuillEditor
+            theme="snow"
+            toolbar="full"
+            v-model:content="feedback"
+            contentType="html"
+          />
+          <el-button
+            type="success"
+            class="mt-20 fr w-100"
+            @click="submitfeedback"
+            >submit</el-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -158,7 +173,10 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import {getLocalData} from "@/components/LocalData";
+import { getLocalData } from "@/components/LocalData";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+
 const questionForm = ref([
   {
     qTtitle: "",
@@ -180,6 +198,7 @@ const result = ref([
 const formSize = ref("default");
 const showConfirm = ref(false);
 const showQuestions = ref(true);
+const showFeedback = ref(false);
 const index = ref(0);
 const fileName = ref("");
 const username = ref("");
@@ -187,10 +206,24 @@ const category = ref("");
 const showComment = ref(false);
 const txtmessage = ref("");
 const messages = ref([]);
+const assign = ref("");
+const feedback = ref("");
+
 onMounted(() => {
   username.value = localStorage.getItem("username") || "";
   category.value = localStorage.getItem("usertype") || "";
   let qrString = localStorage.getItem("surveyResult");
+  let temp= getLocalData("feedback");
+  if(temp){
+    let feed=temp.find((item:any) => item.from == username.value);
+    if(feed.length>0)
+      showFeedback.value = false;
+    else
+      showFeedback.value = true;
+  }
+  else
+    showFeedback.value = true;
+    
   let qrArray = [];
   if (qrString) {
     qrArray = JSON.parse(qrString);
@@ -199,26 +232,29 @@ onMounted(() => {
     (item: any) => item[username.value]
   );
 
+  assign.value = getLocalData("users").find(
+    (item: any) => item.userid === username.value
+  ).assignment;
+
   if (ele) showQuestions.value = false;
   else {
-    let assign = getLocalData("users").find((item: any) => item.userid === username.value)
-      .assignment;
-    let assignment = getLocalData("assignments").find((ele: any) => ele.assignment === assign)
-      .questions;
-    let temp2 = []; 
-      assignment.map((ele: any) => {
-        let temp = getLocalData("questions").find((item: any) => item.qID == ele);
-        if (temp) temp2.push(temp);
-      });
+    let assignment = getLocalData("assignments").find(
+      (ele: any) => ele.assignment === assign.value
+    ).questions;
+    let temp2 = [];
+    assignment.map((ele: any) => {
+      let temp = getLocalData("questions").find((item: any) => item.qID == ele);
+      if (temp) temp2.push(temp);
+    });
     questionForm.value = temp2;
     result.value[0].qId = questionForm.value[0].qID;
     result.value[0].questionText = questionForm.value[0].questionText;
-  // }
+    // }
     showQuestions.value = true;
   }
   // let notifications = localStorage.getItem("notifications");
   // if (notifications) messages.value = JSON.parse(notifications);
-  messages.value = getLocalData("notifications")
+  messages.value = getLocalData("notifications");
   messages.value = messages.value.filter((ele) => ele.to == username.value);
 });
 const nextQuestion = () => {
@@ -251,6 +287,7 @@ const submitResult = () => {
   localStorage.setItem("surveyResult", JSON.stringify(qArray));
   showConfirm.value = false;
   showQuestions.value = false;
+  showFeedback.value = true;
   // router.push("/dashboard");
 };
 
@@ -267,7 +304,7 @@ const saveComment = () => {
     sender: username.value,
     to: "Admin",
     message: txtmessage.value,
-    status:"unread",
+    status: "unread",
   };
   let note = localStorage.getItem("notifications");
   let nArray = [];
@@ -279,5 +316,18 @@ const saveComment = () => {
 
   txtmessage.value = "";
   showComment.value = false;
+};
+
+const submitfeedback = () => {
+  let newfeed = {
+    from: username.value,
+    feedback: feedback.value,
+  };
+  let feedArray = [];
+  let fstr = localStorage.getItem("feedback");
+  if (fstr) feedArray = JSON.parse(fstr);
+  feedArray.push(newfeed);
+  localStorage.setItem("feedback", JSON.stringify(feedArray));
+  showFeedback.value = false;
 };
 </script>

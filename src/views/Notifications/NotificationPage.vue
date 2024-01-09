@@ -1,8 +1,16 @@
 <template>
   <div class="maincontainer">
     <div class="home block">
-      <div class="mb-20">
-        <ul class="nav">
+      <div class="notify-content">
+        <div v-for="(ele, i) in resultArray" :key="i">
+          <div class="ans notify-ans">
+            <p>{{ i + 1 + ") " + ele.questionText }}</p>
+            <p>{{ "Ans: " + ele.ans }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-20">
+        <!-- <ul class="nav">
           <li
             v-for="(msg, i) in messages"
             :key="i"
@@ -16,15 +24,30 @@
               {{ msg.message }}
             </p>
           </li>
-        </ul>
-        <div class="fr mb-20" v-if="!showComment">
-              <el-button
-                type="primary"
-                @click="showComment = true"
-                class="w-100"
-                >Reply</el-button
-              >
+        </ul> -->
+        <div class="message-conversation">
+          <div class="message-list">
+            <div v-for="msg in messages" :key="msg" class="message nav">
+              <div class="message-after-effect"></div>
+              <div class="message-content" :class="{adminbackground:msg.sender=='Admin'}">
+                <p class="sender" :class="{ active: msg.status == 'unread' }">
+                  <span class="mailIcon"><i class="fa fa-envelope"></i>
+                  </span>
+                  {{ msg.sender + ":" }}
+                </p>
+                <p class="sndmsg pl-30" :class="{ active: msg.status == 'unread' }">
+                  {{ msg.message }}
+                </p>
+              </div>
+              
             </div>
+          </div>
+        </div>
+        <div class="fr mb-20" v-if="!showComment">
+          <el-button type="primary" @click="showComment = true" class="w-100"
+            >Reply</el-button
+          >
+        </div>
         <div class="mt-20 mb-20" v-if="showComment">
           <el-input
             v-model="txtmessage"
@@ -38,14 +61,6 @@
             :disabled="txtmessage == ''"
             >Send</el-button
           >
-        </div>
-      </div>
-      <div class="notify-content mt-20">
-        <div v-for="(ele, i) in resultArray" :key="i">
-          <div class="ans notify-ans">
-            <p>{{ i + 1 + ") " + ele.questionText }}</p>
-            <p>{{ "Ans: " + ele.ans }}</p>
-          </div>
         </div>
       </div>
     </div>
@@ -103,12 +118,12 @@ const saveComment = () => {
   showComment.value = false;
 };
 
-const messageRead = (index: any) => {
-  messages.value[messages.value.indexOf(index)].status = "read";
-  let temp = getLocalData("notifications");
-  temp.map((mess, i) => {
-    if (mess.message === index.message) temp[i].status = "read";
-  });
-  localStorage.setItem("notifications", JSON.stringify(temp));
-};
+// const messageRead = (index: any) => {
+//   messages.value[messages.value.indexOf(index)].status = "read";
+//   let temp = getLocalData("notifications");
+//   temp.map((mess, i) => {
+//     if (mess.message === index.message) temp[i].status = "read";
+//   });
+//   localStorage.setItem("notifications", JSON.stringify(temp));
+// };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 500px;">
+  <div class="w-400">
     <span class="signtitle mb-0">{{ showResult ? "Survey Results" :"Assignments"}}</span>
     <DoughnutChart v-bind="doughnutChartProps" @click="updateChart" />
   </div>

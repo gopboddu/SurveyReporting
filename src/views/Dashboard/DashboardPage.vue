@@ -1,6 +1,9 @@
 <template>
   <div class="maincontainer">
-    <div class="">
+      <div class="page_title_left">
+        <h1 class="dashtitle">Dashboard</h1>
+      </div>
+    <div class="t-70">
       <div
         class="chartcontainer"
         v-if="userType == 'Admin' || userType == 'Manager'"

@@ -1,8 +1,10 @@
 <template>
-  <div class="maincontainer">
+  <div class="maincontainer t-20">
+    <div class="page_title_left">
+        <h1 class="dashtitle">Survey Questions</h1>
+      </div>
     <div class="addquestion" v-if="showQuestionBtn">
       <el-button
-        type="success"
         round
         class="addbtn"
         @click="showQuestion = true"
@@ -10,18 +12,19 @@
       >
     </div>
     <div class="home block navborder">
-      <div class="block mb-20">
-        <nav class="flex nav-cont">
-          <button
-            class="navbtn"
-            :class="{ active: showTab == tab.value }"
-            v-for="(tab, index) in tabs"
-            :key="index"
-            @click="updateTabContent(tab.value)"
-          >
-            {{ tab.value }}
-          </button>
-        </nav>
+      <div class="wrapper">
+        <div class="tabs_wrap">
+          <ul>
+            <li
+              :class="{ active: showTab == tab.value }"
+              v-for="(tab, index) in tabs"
+              :key="index"
+              @click="updateTabContent(tab.value)"
+            >
+              {{ tab.value }}
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="tabcontent">
         <div v-for="(res, i) in resultArray" :key="i" class="tab_content">

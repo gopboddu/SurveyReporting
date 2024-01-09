@@ -4,7 +4,7 @@
       <header>
         <div class="image-text">
           <span class="image">
-            <img src="@/assets/logo.svg" alt="" />
+            <img src="@/assets/logo2.png" alt="" :class="{ 'w-50' : barClose}"/>
           </span>
         </div>
         <i class="bx bx-chevron-right toggle bxicon" @click="closeBar"></i>
@@ -107,7 +107,7 @@ export default defineComponent({
       barClose: false,
       showNotification: false,
       messages: [],
-      count:0,
+      count: 0,
     };
   },
   mounted() {
@@ -115,7 +115,9 @@ export default defineComponent({
     this.messages = getLocalData("notifications").filter(
       (ele: any) => ele.to == this.userType
     );
-    this.count = this.messages.filter((item:any) => item.status==='unread').length;
+    this.count = this.messages.filter(
+      (item: any) => item.status === "unread"
+    ).length;
   },
   methods: {
     closeBar() {
@@ -123,10 +125,8 @@ export default defineComponent({
       this.$emit("close", this.barClose);
     },
     updateNotification() {
-      if(this.userType == 'Admin')
-        this.showNotification = true;
-      else
-        this.$router.push("/notifications");
+      if (this.userType == "Admin") this.showNotification = true;
+      else this.$router.push("/notifications");
     },
     addQuestion() {
       this.$emit("addQuestion");
@@ -135,13 +135,12 @@ export default defineComponent({
       if (this.userType == "Admin") this.$router.push("/surveyreport");
       else if (this.userType != "Manager") this.$router.push("/questions");
     },
-    messageRead(index:any) {
+    messageRead(index: any) {
       this.messages[this.messages.indexOf(index)].status = "read";
-      this.count = this.count-1;
+      this.count = this.count - 1;
       let temp = getLocalData("notifications");
       temp.map((mess, i) => {
-        if (mess.message === index.message)
-          temp[i].status = "read";
+        if (mess.message === index.message) temp[i].status = "read";
       });
       localStorage.setItem("notifications", JSON.stringify(temp));
     },
@@ -194,16 +193,15 @@ body {
     padding-left: 15px;
   }
 }
-.crossicon{
+.crossicon {
   font-size: 18px;
   cursor: pointer;
 }
-.activenote
- {
+.activenote {
   transform: translate3d(-300px, 0, 0);
   animation-timing-function: 2s ease-in;
 }
-.mailicon{
+.mailicon {
   padding-right: 20px;
   cursor: pointer;
 }
