@@ -63,15 +63,15 @@
           <li @click="downloadPDF">PDf</li>
         </ul>
       </div> -->
-      
+
       <CommonTable
         :tableDataList="assignmentsList"
         :searchField="'assignment'"
         :action="true"
         v-if="assignmentsList.length > 0"
         @view="handleEdit"
-        @downloadCSV = "downloadCSV"
-        @downloadExcel = "downloadExcel"
+        @downloadCSV="downloadCSV"
+        @downloadExcel="downloadExcel"
       />
     </div>
   </div>
@@ -235,31 +235,12 @@ onMounted(() => {
   tableData.value = assignmentsList.value.slice(0, 10);
 });
 
-const indexMethod = (index: number) => {
-  return (pageCount.value - 1) * 10 + index + 1;
-};
 const getQuestions = (tab) => {
   questionsArray.value = questionsList.value.filter(
     (item: any) => item.category === tab
   );
 };
 
-const downloadPDF = () => {
-  showOptions.value = false;
-  const element = document.getElementById("html2Pdf");
-  const opt = {
-    margin: 0.5,
-    filename: `AssignmentsList.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  };
-
-  var worker = html2pdf().set(opt).from(element).save();
-  if (worker) {
-    showconfirm();
-  }
-};
 const downloadCSV = () => {
   showOptions.value = false;
   const data = assignmentsList.value;
@@ -315,6 +296,24 @@ const downloadExcel = () => {
     worksheet.getCell(`C${index}`).value = "Questions";
     worksheet.getCell(`D${index}`).value = "Category";
     worksheet.getCell(`E${index}`).value = "Options";
+    worksheet.getCell(`C${index}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "dddddd" },
+      bgColor: { argb: "FF0000FF" },
+    };
+    worksheet.getCell(`D${index}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "dddddd" },
+      bgColor: { argb: "FF0000FF" },
+    };
+    worksheet.getCell(`E${index}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "dddddd" },
+      bgColor: { argb: "FF0000FF" },
+    };
     let assignQues = [];
     item.questions.map((element: any) => {
       assignQues.push(

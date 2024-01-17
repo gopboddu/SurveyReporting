@@ -31,7 +31,7 @@
             placeholder="Type to search"
             class="searchbox"
           />
-          <el-table :data="filterTableData" :border="true" ref="tableRef">
+          <el-table :data="filterTableData" :border="true" ref="tableRef" id="html2Pdf">
             <el-table-column label="Question" prop="questionText" width="500" sortable/>
             <el-table-column label="Type" prop="questionType" width="150" sortable 
           :filters="qType"

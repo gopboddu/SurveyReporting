@@ -168,18 +168,3 @@ const filterHandler = (
   return row[property] === value;
 };
 </script>
-<style scopped>
-.el-table th.el-table__cell {
-  background-color: #0079af !important;
-  color: #fff !important;
-  font-weight: 700;
-  font-size: 20px;
-}
-#t1.el-table th.el-table__cell {
-  background-color: #fff !important;
-  color: #5f5f5f !important;
-}
-.el-icon svg {
-    color: #fff;
-}
-</style>
