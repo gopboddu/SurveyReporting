@@ -1,6 +1,12 @@
 <template>
-  <div class="maincontainer">
-    <div class="home block">
+  <div class="maincontainer t-20">
+    <div class="page_title_left">
+      <h1 class="dashtitle">Notifications</h1>
+    </div>
+    <div class="addquestion">
+
+    </div>
+    <div class="home block mt-40">
       <div class="notify-content">
         <div v-for="(ele, i) in resultArray" :key="i">
           <div class="ans notify-ans">

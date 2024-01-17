@@ -1,6 +1,11 @@
 <template>
-  <div class="maincontainer textleft">
-    <div class="home">
+ <div class="maincontainer t-20">
+    <div class="page_title_left">
+      <h1 class="dashtitle">Assignment Questions</h1>
+    </div>
+    <div class="addquestion">
+    </div>
+    <div class="home block navborder">
       <div v-if="showQuestions">
         <div class="surveypart" v-if="questionForm.length > 0">
           <el-form
@@ -216,7 +221,7 @@ onMounted(() => {
   let temp= getLocalData("feedback");
   if(temp){
     let feed=temp.find((item:any) => item.from == username.value);
-    if(feed.length>0)
+    if(feed && feed.length>0)
       showFeedback.value = false;
     else
       showFeedback.value = true;

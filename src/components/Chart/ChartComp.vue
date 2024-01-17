@@ -1,29 +1,51 @@
 <template>
   <div class="w-400">
-    <span class="signtitle mb-0">{{ showResult ? "Survey Results" :"Assignments"}}</span>
-    <DoughnutChart v-bind="doughnutChartProps" @click="updateChart" />
+    <span class="signtitle mb-0 left--50">{{ showResult ? "Survey Results" :"Assignments"}}</span>
+    <el-select
+    v-model="chartType"
+    class="m-2 charttypedropdown"
+    placeholder="Select"
+    size="large"
+    style="width: 140px"
+  >
+    <el-option
+      v-for="item in chartOptions"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
+    <DoughnutChart v-bind="doughnutChartProps" @click="updateChart" v-if="chartType=='donut'"/>
+    <BarChart v-bind="barChartProps" @click="updateChart" v-if="chartType=='bar'"/>
+    <PieChart v-bind="pieChartProps" @click="updateChart" v-if="chartType=='pie'"/>
   </div>
   <el-button type="primary" class="fr w-100 mb-20" @click="updateResult" v-if="showResult">Back</el-button>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
-import { DoughnutChart, useDoughnutChart } from "vue-chart-3";
+import { DoughnutChart, useDoughnutChart, BarChart, useBarChart, PieChart, usePieChart } from "vue-chart-3";
 import { Chart, type ChartData, type ChartOptions, registerables } from "chart.js";
 import { getLocalData } from "../LocalData";
 
 Chart.register(...registerables);
 export default defineComponent({
   name: "ChartComp",
-  components: { DoughnutChart },
-    props: {
-      chartValue : String,
-  },
+  components: { DoughnutChart, BarChart, PieChart },
+  //   props: {
+  //     chartType : String,
+  // },
   setup() {
     const dataValues = ref([]);
     const dataLabels = ref(["Makeup", "Lighting", "Costumes", "Production", "Camera"]);
     const toggleLegend = ref(true);
     const showResult = ref(false);
+    const chartType = ref("donut");
+    const chartOptions = ref([
+      {"value":"donut", "label":"Donut Chart"},
+      {"value":"bar", "label":"Bar Chart"},
+      {"value":"pie", "label":"Pie Chart"},
+    ])
     const testData = computed<ChartData<"doughnut">>(() => ({
       labels: dataLabels.value,
       datasets: [
@@ -65,6 +87,17 @@ export default defineComponent({
       options,
     });
 
+    const { barChartProps, barChartRef } = useBarChart({
+      chartData: testData,
+      options,
+    });
+
+    const { pieChartProps, pieChartRef } = usePieChart({
+      chartData: testData,
+      options,
+    });
+
+
     let index = ref(20);
 
     function shuffleData() {
@@ -101,9 +134,15 @@ export default defineComponent({
       options,
       doughnutChartRef,
       doughnutChartProps,
+      barChartProps,
+      barChartRef,
+      pieChartProps,
+      pieChartRef,
       updateChart,
       updateResult,
-      showResult
+      showResult,
+      chartOptions,
+      chartType
     };
   },
 });

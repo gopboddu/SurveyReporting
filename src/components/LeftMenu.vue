@@ -55,6 +55,13 @@
                 <span class="text nav-text">User Creation</span>
               </router-link>
             </li>
+            
+            <li class="nav-link">
+              <router-link to="/chat">
+                <i class='bx bxs-conversation icon'></i>
+                <span class="text nav-text">Chat window</span>
+              </router-link>
+            </li>
             <li class="">
               <router-link to="/">
                 <i class="bx bx-log-out icon"></i>

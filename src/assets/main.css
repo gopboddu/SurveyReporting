@@ -55,6 +55,9 @@ a,
 .form-control{
   height: 50px;
 }
+.mb-10{
+  margin-bottom: 10px;
+}
 .mb-20{
   margin-bottom: 20px;
 }
@@ -84,6 +87,9 @@ a,
 }
 .pl-30{
   padding-left: 30px !important;
+}
+.pt-20{
+  padding-top: 20px;
 }
 .fr {
   float: right;
@@ -146,6 +152,9 @@ ul {
 .t-20 {
   top:20px;
 }
+.left--50{
+  left: -50px;
+}
 .login{
   position: relative;
   height: 100vh;
@@ -191,7 +200,6 @@ ul {
   font-weight: 600;
   color: #2A387A;
   margin-bottom: 20px;
-  left: -50px;
   position: relative;
 }
 .maincontainer{
@@ -214,18 +222,18 @@ ul {
   padding: 30px;
   border: 2px solid #f0f0f0;
   border-radius: 20px;
-  height: 500px;
+  height: 550px;
   width: 500px;
   background-color: #fff;
   position: relative;
 }
 .userInfo{
-  float: left;
-  width: 500px;
-  height: 300px;
+  text-align: center;
+  /* width: 500px;
+  height: 300px; */
   padding: 20px;
-  border: 2px solid #f0f0f0;
-  border-radius: 20px;
+  /* border: 2px solid #f0f0f0;
+  border-radius: 20px; */
   display: flex;
   margin-right: 30px;
 }
@@ -237,7 +245,6 @@ ul {
 .profilename{
   font-weight: 700;
   font-size: 24;
-  width: 200px;
   text-align: center;
 }
 .leftpart{
@@ -755,6 +762,9 @@ body.dark .switch::before {
   padding-left: 10px;
   padding-right: 10px;
 }
+.active{
+  font-weight: 600;
+}
 .closebtn{
   float: right;
   font-size: 20px;
@@ -809,7 +819,6 @@ a:hover {
   width: 70% !important;
 }
 .assigntable{
-  border: 1px solid #d1cece;
   border-radius: 10px;
 }
 .el-table {
@@ -957,4 +966,70 @@ a:hover {
 
 .wrapper .container .item_wrap:hover{
   background: #e9ecf1;
+}
+
+/* Chat CSS */
+.vac-rooms-container .vac-app-border-r {
+  width:10px !important;
+  display: none !important;
+}
+.questable{
+  padding: 20px;
+}
+
+.searchbox{
+  width: 300px !important;
+  float: right;
+  height: 30px;
+  border-radius: 20px !important;
+  margin-bottom: 10px;
+}
+.pagination{
+  text-align: center;
+  padding-top: 20px;
+  display: flex;
+}
+
+.downloadbtn{
+  width: 100%;
+    padding-right: 20px;
+}
+.downloadtype{
+  position: relative;
+    width: 100px;
+    float: right;
+}
+.downul{
+  bottom: 100%;
+  position: relative;
+  top: -144px;
+  float: right;
+  left: -40px;
+  background-color: crimson;
+  color: #fff;
+  z-index: 99;
+  padding: 10px;
+  width: 100px;
+}
+
+.downul  li:hover{
+  background-color: #67c23a;
+  cursor: pointer;
+}
+
+.printonly{
+  display: flex;
+  padding-top: 30px;
+  padding-left: 30px;
+}
+
+.printTitle{
+  font-size: 30px !important;
+  width: 100%;
+  text-align: center;
+}
+
+.charttypedropdown{
+  float: right;
+  left: 55px;
 }

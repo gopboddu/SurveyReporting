@@ -8,6 +8,8 @@ import SurveyQuestions from '../views/SurveyReport/SurveyQuestions.vue'
 import CreateAssignment from '@/views/Assignment/CreateAssignment.vue'
 import CreateUser from '@/views/Users/CreateUser.vue'
 import Notifications from '@/views/Notifications/NotificationPage.vue'
+import ChatPage from '@/views/Chat/ChatPage.vue'
+import ChatPage3 from '@/views/Chat/ChatPage3.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -56,6 +58,16 @@ const router = createRouter({
       path: '/notifications',
       name: 'notifications',
       component: Notifications
+    },
+    {
+      path: '/chat',
+      name: 'chatpage',
+      component: ChatPage
+    },
+    {
+      path: '/chatHub',
+      name: 'chatpage3',
+      component: ChatPage3
     },
   ]
 })

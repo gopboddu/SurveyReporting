@@ -1,7 +1,13 @@
 <template>
-  <div class="maincontainer">
-    <div class="home">
-      <div class="userInfo">
+  <div class="maincontainer t-20">
+    <div class="page_title_left">
+      <h1 class="dashtitle">Profile</h1>
+    </div>
+    <div class="addquestion">
+      
+    </div>
+    <div class="home block navborder">
+      <div class="userInfo mt-40">
         <div class="leftpart">
           <img src="@/assets/about-me.jpg" alt="" class="profileimg" />
           <h1 class="profilename">John Toe</h1>

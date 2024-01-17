@@ -1,8 +1,33 @@
-import type { log } from 'console'; import type { userInfo } from 'os'; import
-type { onMounted } from 'vue'; import type { onMounted } from 'vue';
 <template>
-  <div class="maincontainer">
-    <div class="home block">
+  <div class="maincontainer t-20">
+    <div class="page_title_left">
+      <h1 class="dashtitle">User Creation</h1>
+    </div>
+    <div class="addquestion"></div>
+    <div class="home block navborder">
+      <div class="selectuser mt-40">
+        <label class="label-width">Select Category:</label>
+        <el-select
+          v-model="user.category"
+          placeholder="Select Category"
+          size="large"
+          @change="getUsersList"
+        >
+          <el-option key="" label="Select Category" value="" />
+          <el-option
+            v-for="item in category"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+        <div
+          class="invalid-text msgError"
+          v-if="submitted && user.category == ''"
+        >
+          Category field is required.
+        </div>
+      </div>
       <div class="selectuser mb-20">
         <label class="label-width">User Id:</label>
         <el-input v-model="user.userID" class="width50" />
@@ -28,29 +53,6 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
           v-if="submitted && user.password == ''"
         >
           Password field is required.
-        </div>
-      </div>
-
-      <div class="selectuser">
-        <label class="label-width">Select Category:</label>
-        <el-select
-          v-model="user.category"
-          placeholder="Select Category"
-          size="large"
-        >
-          <el-option key="" label="Select Category" value="" />
-          <el-option
-            v-for="item in category"
-            :key="item"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
-        <div
-          class="invalid-text msgError"
-          v-if="submitted && user.category == ''"
-        >
-          Category field is required.
         </div>
       </div>
       <div class="selectuser mb-40">
@@ -105,6 +107,7 @@ type { onMounted } from 'vue'; import type { onMounted } from 'vue';
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { getLocalData } from "@/components/LocalData";
 const user = ref({
   userID: "",
   password: "",
@@ -122,12 +125,10 @@ const category = ref([
 const assignments = ref([]);
 const showConfirm = ref(false);
 const submitted = ref(false);
+const usersList = ref([]);
 
 onMounted(() => {
-  let assment = localStorage.getItem("assignments");
-  if (assment) {
-    assignments.value = JSON.parse(assment);
-  }
+  assignments.value = getLocalData("assignments");
   passwordGenerate();
 });
 
@@ -148,13 +149,8 @@ const createUser = () => {
       path: "/questions",
     };
 
-    let users = localStorage.getItem("users");
-    let aArray = [];
-    if (users) {
-      aArray = JSON.parse(users);
-    }
-    aArray.push(obj);
-    localStorage.setItem("users", JSON.stringify(aArray));
+    usersList.value.push(obj);
+    localStorage.setItem("users", JSON.stringify(usersList.value));
     showConfirm.value = true;
     user.value.userID = "";
     user.value.password = "";
@@ -162,7 +158,11 @@ const createUser = () => {
     user.value.assignment = "";
   }
 };
-
+const getUsersList = () => {
+  usersList.value = getLocalData("users");
+  let temp = usersList.value.filter((users) => users.usertype === user.value.category)
+  user.value.userID = user.value.category.toLowerCase()+((temp.length+1)<10?'0'+(temp.length+1):(temp.length+1));
+};
 const passwordGenerate = () => {
   let CharacterSet =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%&*$#^<>~@|";

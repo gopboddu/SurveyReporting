@@ -1,13 +1,10 @@
 <template>
   <div class="maincontainer t-20">
     <div class="page_title_left">
-        <h1 class="dashtitle">Survey Questions</h1>
-      </div>
+      <h1 class="dashtitle">Survey Questions</h1>
+    </div>
     <div class="addquestion" v-if="showQuestionBtn">
-      <el-button
-        round
-        class="addbtn"
-        @click="showQuestion = true"
+      <el-button round class="addbtn" @click="showQuestion = true"
         >Add Question</el-button
       >
     </div>
@@ -27,14 +24,20 @@
         </div>
       </div>
       <div class="tabcontent">
-        <div v-for="(res, i) in resultArray" :key="i" class="tab_content">
-          <div>
-            <p class="ques">{{ i + 1 + ") " + res.questionText }}</p>
-            <p class="ques ml-10">{{ "Question Type: " + res.questionType }}</p>
-            <p class="ques ml-10" v-if="res.options.length > 0">
-              {{ "Options: " + res.options.join() }}
-            </p>
-          </div>
+        <div class="questable">
+          <el-input
+            v-model="search"
+            size="small"
+            placeholder="Type to search"
+            class="searchbox"
+          />
+          <el-table :data="filterTableData" :border="true" ref="tableRef">
+            <el-table-column label="Question" prop="questionText" width="500" sortable/>
+            <el-table-column label="Type" prop="questionType" width="150" sortable 
+          :filters="qType"
+          :filter-method="filterHandler"/>
+            <el-table-column label="Options" prop="options" sortable/>
+          </el-table>
         </div>
       </div>
     </div>
@@ -80,8 +83,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import AddQuestion from "@/components/QuestionPage.vue";
+import type { TableColumnCtx, TableInstance } from 'element-plus'
 
 const tabs = ref([
   { id: 1, value: "Makeup" },
@@ -95,6 +99,13 @@ const showQuestionBtn = ref(false);
 const questionpopup = ref(false);
 const showQuestion = ref(false);
 const questionType = ref("");
+const search = ref("");
+const qType = ref([
+  { value: "single", text: "Single" },
+  { value: "mline", text: "Multi Line" },
+  { value: "msl", text: "Multi Select" },
+  { value: "boolean", text: "Boolean" },
+]);
 onMounted(() => {
   let userType = localStorage.getItem("usertype") || "";
   if (userType == "Admin") showQuestionBtn.value = true;
@@ -120,5 +131,30 @@ const addQuestionPopup = (type: any) => {
 };
 const closePopup = () => {
   questionpopup.value = false;
+};
+
+const filterTableData = computed(() =>
+  resultArray.value.filter(
+    (data) =>
+      !search.value ||
+      data.questionText.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
+
+interface Item {
+  questionText: string
+  questionType: string
+  options: string
+}
+
+const tableRef = ref<TableInstance>();
+
+const filterHandler = (
+  value: string,
+  row: Item,
+  column: TableColumnCtx<Item>
+) => {
+  const property = column["property"];
+  return row[property] === value;
 };
 </script>

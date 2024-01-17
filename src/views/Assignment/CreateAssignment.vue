@@ -1,13 +1,23 @@
 <template>
-  <div class="maincontainer">
-    <div class="home block">
-      <div class="addquestion">
-        <el-button type="success" round class="addbtn" @click="showAdd = true"
-          >New Assignmnet</el-button
-        >
-      </div>
-      <div class="assigntable">
-        <el-table :data="assignmentsList" :border="true">
+  <div class="maincontainer t-20">
+    <div class="page_title_left">
+      <h1 class="dashtitle">Assignments</h1>
+    </div>
+    <div class="addquestion">
+      <el-button round class="addbtn" @click="showAdd = true"
+        >New Assignmnet</el-button
+      >
+    </div>
+    <div class="home block navborder">
+      <!-- <div class="questable">
+        <el-input
+          v-model="search"
+          size="small"
+          placeholder="Type to search"
+          class="searchbox"
+        />
+        <el-table :data="filterTableData" :border="true" id="html2Pdf">
+          <h1>Survey Report</h1>
           <el-table-column
             type="index"
             label="Sl.No"
@@ -28,33 +38,41 @@
             </template>
           </el-table-column>
         </el-table>
-        <!-- <el-table :data="assignmentsList" :border="true">
-          <el-table-column type="expand">
-            <template #default="props">
-              <div m="4">
-                <el-table :data="props.row.quesList" :border="false" id="t1">
-                  <el-table-column
-                    label="Q ID"
-                    prop="qID"
-                    width="100"
-                    id="t1"
-                  />
-                  <el-table-column label="Question" prop="questionText" />
-                  <el-table-column label="Options" prop="options" />
-                </el-table>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            type="index"
-            label="Sl.No"
-            :index="indexMethod"
-            width="80"
+        <div class="pagination flex">
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="assignmentsList.length"
+            @change="updatePage"
           />
-          <el-table-column prop="assignment" label="Assignment Name" sortable />
-          <el-table-column prop="categeory" label="Status" sortable />
-        </el-table> -->
-      </div>
+          <div class="downloadbtn">
+            <el-button
+              type="primary"
+              class="w-100 fr"
+              size="small"
+              @click="showOptions = !showOptions"
+              >Download</el-button
+            >
+          </div>
+        </div>
+      </div> -->
+      <!-- <div v-if="showOptions" class="downloadtype">
+        <ul class="downul">
+          <li @click="downloadCSV">CSV</li>
+          <li @click="downloadExcel">Excel</li>
+          <li @click="downloadPDF">PDf</li>
+        </ul>
+      </div> -->
+      
+      <CommonTable
+        :tableDataList="assignmentsList"
+        :searchField="'assignment'"
+        :action="true"
+        v-if="assignmentsList.length > 0"
+        @view="handleEdit"
+        @downloadCSV = "downloadCSV"
+        @downloadExcel = "downloadExcel"
+      />
     </div>
   </div>
   <div class="confirmbox" v-if="showAdd">
@@ -153,27 +171,42 @@
         </div>
       </div>
       <div class="confirm-body mt-20 pr-40">
-        <div class="selectuser">
-          <div v-for="(res, i) in assignQuestions" :key="i" class="mb-20">
-            <p class="ques quesback">{{ res.questionText }}</p>
-            <p class="ques ml-10"><span class="label-width2">Question Type: </span>{{ res.questionType }}</p>
-            <p class="ques ml-10 mb-20" v-if="res.options.length > 0"><span class="label-width2">Options: </span>
-              {{ res.options.join() }}
-            </p>
-            <!-- <hr> -->
-          </div>
+        <div class="questable">
+          <el-table :data="assignQuestions" :border="true">
+            <el-table-column
+              label="Question"
+              prop="questionText"
+              width="500"
+              sortable
+            />
+            <el-table-column
+              label="Type"
+              prop="questionType"
+              width="100"
+              sortable
+            />
+            <el-table-column label="Options" prop="options" sortable />
+          </el-table>
         </div>
       </div>
     </div>
   </div>
+  <div v-if="showSuccessPopup" class="success-popup">
+    File downloaded successfully!
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import VueMultiselect from "vue-multiselect";
 import { getLocalData } from "@/components/LocalData";
+import CommonTable from "@/components/Table/CommonTable.vue";
+import html2pdf from "html2pdf.js";
+import ExcelJS from "exceljs";
+
 const assignmentName = ref("");
 const selcategeory = ref("");
+const search = ref("");
 const qList = ref([]);
 const category = ref([
   "Makeup",
@@ -186,18 +219,24 @@ const questionsArray = ref([]);
 const showConfirm = ref(false);
 const showAdd = ref(false);
 const assignmentsList = ref([]);
+const tableData = ref([]);
 const questionsList = ref([]);
 const submitted = ref(false);
 const showAssignment = ref(false);
 const assignQuestions = ref([]);
 const assignName = ref([]);
+const pageCount = ref(1);
+const showSuccessPopup = ref(false);
+const showOptions = ref(false);
+
 onMounted(() => {
   questionsList.value = getLocalData("questions");
   assignmentsList.value = getLocalData("assignments");
+  tableData.value = assignmentsList.value.slice(0, 10);
 });
 
 const indexMethod = (index: number) => {
-  return index + 1;
+  return (pageCount.value - 1) * 10 + index + 1;
 };
 const getQuestions = (tab) => {
   questionsArray.value = questionsList.value.filter(
@@ -205,6 +244,121 @@ const getQuestions = (tab) => {
   );
 };
 
+const downloadPDF = () => {
+  showOptions.value = false;
+  const element = document.getElementById("html2Pdf");
+  const opt = {
+    margin: 0.5,
+    filename: `AssignmentsList.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+
+  var worker = html2pdf().set(opt).from(element).save();
+  if (worker) {
+    showconfirm();
+  }
+};
+const downloadCSV = () => {
+  showOptions.value = false;
+  const data = assignmentsList.value;
+  let csvContent = "data:text/csv;charset=utf-8,";
+  const headers = ["Assignment Name", "Question", "Category", "Options"];
+  csvContent += headers.join(",") + "\n";
+
+  data.forEach((item) => {
+    let assignQues = [];
+    item.questions.map((element: any) => {
+      assignQues.push(
+        questionsList.value.find((ques: any) => ques.qID == element)
+      );
+    });
+    assignQues.map((childrow) => {
+      const row = [
+        item.assignment,
+        childrow.qTtitle,
+        childrow.category,
+        childrow.options.join(" "),
+      ];
+      csvContent += row.join(",") + "\n";
+    });
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "AssignmentsList.csv");
+  document.body.appendChild(link);
+  link.click();
+  showconfirm();
+};
+const downloadExcel = () => {
+  showOptions.value = false;
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Sheet 1");
+  // Set up the headers
+  worksheet.mergeCells("A1:E1");
+  worksheet.getCell("A1").value = "Survey Report";
+  worksheet.getCell("A1").alignment = {
+    vertical: "middle",
+    horizontal: "center",
+  };
+  worksheet.getCell("A2").value = "SL.NO";
+  worksheet.getCell("B2").value = "Assignment Name";
+
+  // Populate the data
+  let index = 2;
+  assignmentsList.value.map((item) => {
+    worksheet.getCell(`A${index}`).value = index - 1;
+    worksheet.getCell(`B${index}`).value = item.assignment;
+    worksheet.getCell(`C${index}`).value = "Questions";
+    worksheet.getCell(`D${index}`).value = "Category";
+    worksheet.getCell(`E${index}`).value = "Options";
+    let assignQues = [];
+    item.questions.map((element: any) => {
+      assignQues.push(
+        questionsList.value.find((ques: any) => ques.qID == element)
+      );
+    });
+    let n = 0;
+    assignQues.forEach((child, i) => {
+      worksheet.getCell(`C${index + i + 1}`).value = child.qTtitle;
+      worksheet.getCell(`D${index + i + 1}`).value = child.category;
+      worksheet.getCell(`E${index + i + 1}`).value = child.options.join(" ");
+      n = i + 1;
+    });
+    worksheet.mergeCells(`B${index}:B${index + n - 1}`);
+    worksheet.getCell(`B${index}`).alignment = {
+      vertical: "top",
+      horizontal: "left",
+    };
+    index += n;
+  });
+  // Auto-fit the columns
+  worksheet.columns.forEach((column) => {
+    column.width = 15;
+  });
+  // Generate the Excel file
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "AssignmentsList.xlsx";
+    link.click();
+    showconfirm();
+  });
+};
+
+const showconfirm = () => {
+  showSuccessPopup.value = true;
+  setTimeout(() => {
+    showSuccessPopup.value = false;
+  }, 3000);
+};
 const saveAssignment = () => {
   if (
     assignmentName.value == "" ||
@@ -258,12 +412,35 @@ const handleEdit = (data: any) => {
   assignQuestions.value = assignQues;
   showAssignment.value = true;
 };
+
+const filterTableData = computed(() =>
+  tableData.value.filter(
+    (data) =>
+      !search.value ||
+      data.assignment.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
+const updatePage = (ev: any) => {
+  pageCount.value = ev;
+  tableData.value = assignmentsList.value.slice(ev * 10 - 10, ev * 10);
+};
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style scopped>
-.multiselect__tag {
-  /* display : none !important; */
+.success-popup {
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  background-color: #32cd32;
+  color: white;
+  font-weight: bold;
 }
+
+/* .multiselect__tag {
+  display : none !important;
+} */
 .multiselect__option {
   text-overflow: ellipsis;
   white-space: nowrap;
