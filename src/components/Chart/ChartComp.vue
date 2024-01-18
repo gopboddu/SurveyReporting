@@ -37,11 +37,6 @@
       @click="updateChart"
       v-if="chartType == 'line'"
     />
-    <BubbleChart
-      v-bind="bubbleChartProps"
-      @click="updateChart"
-      v-if="chartType == 'bubble'"
-    />
   </div>
   <el-button
     type="primary"
@@ -54,14 +49,14 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
-import { DoughnutChart, useDoughnutChart, BarChart, useBarChart, PieChart, usePieChart, BubbleChart, LineChart, useLineChart, useBubbleChart } from "vue-chart-3";
+import { DoughnutChart, useDoughnutChart, BarChart, useBarChart, PieChart, usePieChart, LineChart, useLineChart } from "vue-chart-3";
 import { Chart, type ChartData, type ChartOptions, registerables } from "chart.js";
 import { getLocalData } from "../LocalData";
 
 Chart.register(...registerables);
 export default defineComponent({
   name: "ChartComp",
-  components: { DoughnutChart, BarChart, PieChart, BubbleChart, LineChart },
+  components: { DoughnutChart, BarChart, PieChart, LineChart },
   //   props: {
   //     chartType : String,
   // },
@@ -76,7 +71,6 @@ export default defineComponent({
       {"value":"bar", "label":"Bar Chart"},
       {"value":"pie", "label":"Pie Chart"},
       {"value":"line", "label":"Line Chart"},
-      {"value":"bubble", "label":"Bubble Chart"},
     ])
     const testData = computed<ChartData<"doughnut">>(() => ({
       labels: dataLabels.value,
@@ -129,14 +123,11 @@ export default defineComponent({
       options,
     });
 
-    const { lineChartProps, lineChartRef } = usePieChart({
+    const { lineChartProps, lineChartRef } = useLineChart({
       chartData: testData,
       options,
     });
-    const { bubbleChartProps, bubbleChartRef } = usePieChart({
-      chartData: testData,
-      options,
-    });
+    
     let index = ref(20);
 
     function shuffleData() {
@@ -179,8 +170,6 @@ export default defineComponent({
       pieChartRef,
       lineChartProps,
       lineChartRef,
-      bubbleChartProps,
-      bubbleChartRef,
       updateChart,
       updateResult,
       showResult,
