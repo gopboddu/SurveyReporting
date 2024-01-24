@@ -1,13 +1,14 @@
 <template>
   <div class="left-menu">
-    <div class="sidebar" :class="{ close: barClose }">
+    <!-- <div class="sidebar" :class="{ close: barClose }"> -->
+    <div class="sidebar" @mouseover="closeBar" @mouseout="openBar">
       <header>
         <div class="image-text">
           <span class="image">
-            <img src="@/assets/logo2.png" alt="" :class="{ 'w-50' : barClose}"/>
+            <img src="@/assets/logo2.png" alt="" k />
           </span>
         </div>
-        <i class="bx bx-chevron-right toggle bxicon" @click="closeBar"></i>
+        <!-- <i class="bx bx-chevron-right toggle bxicon" @click="closeBar"></i> -->
       </header>
       <div class="menu-bar">
         <div class="menu">
@@ -37,32 +38,36 @@
               </router-link>
             </li>
             <li class="nav-link" @click="pageRedirectTo">
-              <i class="bx bx-bar-chart-alt-2 icon"></i>
-              <span class="text nav-text">{{
-                userType == "Admin" ? "Survey Report" : "Survey"
-              }}</span>
+              <router-link to="">
+                <i class="bx bx-bar-chart-alt-2 icon"></i>
+                <span class="text nav-text">{{
+                  userType == "Admin" ? "Survey Report" : "Survey"
+                }}</span></router-link
+              >
             </li>
-            <li
-              class="nav-link"
-              @click="updateNotification"
-            >
-              <i class="bx bx-bell icon"></i>
-              <span class="text nav-text">Notifications <span v-if="count>0" class="count">{{ count }}</span></span>
+            <li class="nav-link" @click="updateNotification">
+              <router-link to="">
+                <i class="bx bx-bell icon"></i>
+                <span class="text nav-text"
+                  >Notifications
+                  <span v-if="count > 0" class="count">{{ count }}</span></span
+                >
+              </router-link>
             </li>
             <li class="nav-link" v-if="userType == 'Admin'">
-              <router-link to="/createuser">
+              <router-link to="/createuser" class="left-menulink">
                 <i class="bx bxs-user-account icon"></i>
                 <span class="text nav-text">User Creation</span>
               </router-link>
             </li>
-            
+
             <li class="nav-link">
               <router-link to="/chat">
-                <i class='bx bxs-conversation icon'></i>
+                <i class="bx bxs-conversation icon"></i>
                 <span class="text nav-text">Chat window</span>
               </router-link>
             </li>
-            <li class="">
+            <li class="nav-link">
               <router-link to="/">
                 <i class="bx bx-log-out icon"></i>
                 <span class="text nav-text">Logout</span>
@@ -74,11 +79,14 @@
     </div>
   </div>
   <div class="right-menu" v-if="showNotification">
-    <div class="menuone" :class="{ activenote : showNotification }">
-      <div class="title">Notifications
-        <span  @click="showNotification = false" class="fr crossicon"><i class="fa fa-close"></i></span>
+    <div class="menuone" :class="{ activenote: showNotification }">
+      <div class="title">
+        Notifications
+        <span @click="showNotification = false" class="fr crossicon"
+          ><i class="fa fa-close"></i
+        ></span>
       </div>
-     
+
       <ul class="nav">
         <li
           v-for="(msg, i) in messages.slice().reverse()"
@@ -88,13 +96,17 @@
         >
           <p class="sender" :class="{ active: msg.status == 'unread' }">
             {{ msg.sender + ":" }}
-            <span class="fr mailicon" v-if="msg.status == 'unread'"><i class="fa fa-solid fa-envelope"></i></span>
-            <span class="fr mailicon" v-else><i class="fa fa-solid fa-envelope-open"></i></span>
+            <span class="fr mailicon" v-if="msg.status == 'unread'"
+              ><i class="fa fa-solid fa-envelope"></i
+            ></span>
+            <span class="fr mailicon" v-else
+              ><i class="fa fa-solid fa-envelope-open"></i
+            ></span>
           </p>
           <p class="sndmsg" :class="{ active: msg.status == 'unread' }">
             {{ msg.message }}
-          </p> 
-          <div class="mt-20 pr-20"><hr color="0079AF"></div>
+          </p>
+          <div class="mt-20 pr-20"><hr color="0079AF" /></div>
         </li>
       </ul>
     </div>
@@ -128,7 +140,11 @@ export default defineComponent({
   },
   methods: {
     closeBar() {
-      this.barClose = !this.barClose;
+      this.barClose = false;
+      this.$emit("close", this.barClose);
+    },
+    openBar() {
+      this.barClose = true;
       this.$emit("close", this.barClose);
     },
     updateNotification() {

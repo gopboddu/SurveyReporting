@@ -31,12 +31,27 @@
             placeholder="Type to search"
             class="searchbox"
           />
-          <el-table :data="filterTableData" :border="true" ref="tableRef" id="html2Pdf">
-            <el-table-column label="Question" prop="questionText" width="500" sortable/>
-            <el-table-column label="Type" prop="questionType" width="150" sortable 
-          :filters="qType"
-          :filter-method="filterHandler"/>
-            <el-table-column label="Options" prop="options" sortable/>
+          <el-table
+            :data="filterTableData"
+            :border="true"
+            ref="tableRef"
+            id="html2Pdf"
+          >
+            <el-table-column
+              label="Question"
+              prop="questionText"
+              width="500"
+              sortable
+            />
+            <el-table-column
+              label="Type"
+              prop="questionType"
+              width="150"
+              sortable
+              :filters="qType"
+              :filter-method="filterHandler"
+            />
+            <el-table-column label="Options" prop="options" sortable />
           </el-table>
         </div>
       </div>
@@ -85,7 +100,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
 import AddQuestion from "@/components/QuestionPage.vue";
-import type { TableColumnCtx, TableInstance } from 'element-plus'
+import type { TableColumnCtx, TableInstance } from "element-plus";
 
 const tabs = ref([
   { id: 1, value: "Makeup" },
@@ -142,9 +157,9 @@ const filterTableData = computed(() =>
 );
 
 interface Item {
-  questionText: string
-  questionType: string
-  options: string
+  questionText: string;
+  questionType: string;
+  options: string;
 }
 
 const tableRef = ref<TableInstance>();

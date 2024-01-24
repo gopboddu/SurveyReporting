@@ -9,61 +9,6 @@
       >
     </div>
     <div class="home block navborder">
-      <!-- <div class="questable">
-        <el-input
-          v-model="search"
-          size="small"
-          placeholder="Type to search"
-          class="searchbox"
-        />
-        <el-table :data="filterTableData" :border="true" id="html2Pdf">
-          <h1>Survey Report</h1>
-          <el-table-column
-            type="index"
-            label="Sl.No"
-            :index="indexMethod"
-            width="80"
-          />
-          <el-table-column prop="assignment" label="Assignment Name" sortable />
-          <el-table-column prop="categeory" label="Category" sortable />
-          <el-table-column label="Action" width="100" :align="'center'">
-            <template #default="scope">
-              <el-button
-                type="primary"
-                class="w-50"
-                size="small"
-                @click="handleEdit(scope.row)"
-                >View</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination flex">
-          <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="assignmentsList.length"
-            @change="updatePage"
-          />
-          <div class="downloadbtn">
-            <el-button
-              type="primary"
-              class="w-100 fr"
-              size="small"
-              @click="showOptions = !showOptions"
-              >Download</el-button
-            >
-          </div>
-        </div>
-      </div> -->
-      <!-- <div v-if="showOptions" class="downloadtype">
-        <ul class="downul">
-          <li @click="downloadCSV">CSV</li>
-          <li @click="downloadExcel">Excel</li>
-          <li @click="downloadPDF">PDf</li>
-        </ul>
-      </div> -->
-
       <CommonTable
         :tableDataList="assignmentsList"
         :searchField="'assignment'"
@@ -172,7 +117,7 @@
       </div>
       <div class="confirm-body mt-20 pr-40">
         <div class="questable">
-          <el-table :data="assignQuestions" :border="true">
+          <el-table :data="assignQuestions" :border="true" ref="tableRef">
             <el-table-column
               label="Question"
               prop="questionText"
@@ -182,8 +127,10 @@
             <el-table-column
               label="Type"
               prop="questionType"
-              width="100"
+              width="140"
               sortable
+              :filters="qType"
+              :filter-method="filterHandler"
             />
             <el-table-column label="Options" prop="options" sortable />
           </el-table>
@@ -201,12 +148,12 @@ import { ref, onMounted, computed } from "vue";
 import VueMultiselect from "vue-multiselect";
 import { getLocalData } from "@/components/LocalData";
 import CommonTable from "@/components/Table/CommonTable.vue";
-import html2pdf from "html2pdf.js";
 import ExcelJS from "exceljs";
+import type { TableColumnCtx, TableInstance } from "element-plus";
 
 const assignmentName = ref("");
 const selcategeory = ref("");
-const search = ref("");
+// const search = ref("");
 const qList = ref([]);
 const category = ref([
   "Makeup",
@@ -214,6 +161,12 @@ const category = ref([
   "Costumes",
   "Production",
   "Camera",
+]);
+const qType = ref([
+  { value: "single", text: "Single" },
+  { value: "mline", text: "Multi Line" },
+  { value: "msl", text: "Multi Select" },
+  { value: "boolean", text: "Boolean" },
 ]);
 const questionsArray = ref([]);
 const showConfirm = ref(false);
@@ -412,16 +365,32 @@ const handleEdit = (data: any) => {
   showAssignment.value = true;
 };
 
-const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value ||
-      data.assignment.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
-const updatePage = (ev: any) => {
-  pageCount.value = ev;
-  tableData.value = assignmentsList.value.slice(ev * 10 - 10, ev * 10);
+// const filterTableData = computed(() =>
+//   tableData.value.filter(
+//     (data) =>
+//       !search.value ||
+//       data.assignment.toLowerCase().includes(search.value.toLowerCase())
+//   )
+// );
+// const updatePage = (ev: any) => {
+//   pageCount.value = ev;
+//   tableData.value = assignmentsList.value.slice(ev * 10 - 10, ev * 10);
+// };
+interface Item {
+  questionText: string;
+  questionType: string;
+  options: string;
+}
+
+const tableRef = ref<TableInstance>();
+
+const filterHandler = (
+  value: string,
+  row: Item,
+  column: TableColumnCtx<Item>
+) => {
+  const property = column["property"];
+  return row[property] === value;
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

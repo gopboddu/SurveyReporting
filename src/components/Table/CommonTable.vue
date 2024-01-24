@@ -112,13 +112,21 @@ const downloadPDF = () => {
     const element = document.getElementById("html2Pdf");
     const opt = {
       margin: 0.5,
-      filename: `sample.pdf`,
+      filename: `assignmentList.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
-    var worker = html2pdf().set(opt).from(element).save();
+    var worker = html2pdf().set(opt).from(element).save().then(() => {
+          const url = 'assignmentList.pdf'; 
+          const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'test.pdf');
+                        document.body.appendChild(link);
+                        link.click();
+        });;
+    
     if (worker) {
       showSuccessPopup.value = true;
       setTimeout(() => {
